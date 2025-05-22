@@ -19,6 +19,7 @@ app.use(express.static('public'))
 // config routes
 webRoutes(app);
 
+
 app.listen(port, () => {
     console.log(`My app is running on port: ${port}`);
 })
