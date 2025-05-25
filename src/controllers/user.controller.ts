@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { log } from "node:console";
-import { getAllUsers, handleCreateUser, handleDeleteUser, getUserById, updateUserById } from "services/user.service";
+import { getAllUsers, handleCreateUser, handleDeleteUser, getUserById, updateUserById, getAllRoles } from "services/user.service";
 
 const getHomePage = async (req: Request, res: Response) => {
     // get users
@@ -11,16 +11,19 @@ const getHomePage = async (req: Request, res: Response) => {
     });
 }
 
-const getCreateUserPage = (req: Request, res: Response) => {
-    return res.render("create.user.ejs")
+const getCreateUserPage = async (req: Request, res: Response) => {
+    const roles = await getAllRoles();
+    return res.render("admin/user/create.ejs", {
+        roles
+    })
 }
 
 // Tạo mới useruser
 const postCreateUser = async (req: Request, res: Response) => {
-    const { name, email, address } = req.body;
+    const { name, username, address, phone, role } = req.body;
 
     //handle create user 
-    await handleCreateUser(name, email, address);
+    // await handleCreateUser(name, email, address);
 
     return res.redirect("/")
 }
@@ -51,5 +54,4 @@ const postUpdateUser = async (req: Request, res: Response) => {
 
     return res.redirect("/")
 }
-
 export { getHomePage, getCreateUserPage, postCreateUser, postDeleteUser, getViewUser, postUpdateUser };
