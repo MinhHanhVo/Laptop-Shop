@@ -1,5 +1,7 @@
 import { name } from "ejs";
 import { prisma } from "./client";
+import { hashPassword } from "services/user.service";
+import { ACCOUNT_TYPE } from "./constant";
 
 const initDatabase = async () => {
     const countUser = await prisma.user.count();
@@ -17,23 +19,33 @@ const initDatabase = async () => {
                 }
             ]
         })
-    } else if (countUser === 0) {
-        await prisma.user.createMany({
-            data: [
-                {
-                    username: "minhhanh@gmail.com",
-                    password: "123456",
-                    accountType: "SYSTEM"
-                },
-                {
-                    username: "admin@gmail.com",
-                    password: "123456",
-                    accountType: "SYSTEM"
-                }]
+    }
+    if (countUser === 0) {
+        const defaullPassword = await hashPassword("123456");
+        const adminRole = await prisma.role.findFirst({
+            where: { name: "ADMIN" }
         })
-    } else {
+        if (adminRole)
+            await prisma.user.createMany({
+                data: [
+                    {
+                        fullName: "Minh Hanh",
+                        username: "minhhanh@gmail.com",
+                        password: defaullPassword,
+                        accountType: ACCOUNT_TYPE.SYSTEM,
+                        roleId: adminRole.id
+                    },
+                    {
+                        fullName: "Admin",
+                        username: "admin@gmail.com",
+                        password: defaullPassword,
+                        accountType: ACCOUNT_TYPE.SYSTEM,
+                        roleId: adminRole.id
+                    }]
+            })
+    }
+    if (countRole !== 0 && countUser !== 0) {
         console.log(">>> Already init data ");
-
     }
 
 }
