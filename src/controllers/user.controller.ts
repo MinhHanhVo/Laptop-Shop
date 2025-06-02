@@ -1,10 +1,14 @@
 import { Request, Response } from "express";
-import { log } from "node:console";
-import { getAllUsers, handleCreateUser, handleDeleteUser, getUserById, updateUserById, getAllRoles } from "services/user.service";
+import { getProducts } from "services/client/item.service";
+import { handleCreateUser, handleDeleteUser, getUserById, updateUserById, getAllRoles } from "services/user.service";
 
 const getHomePage = async (req: Request, res: Response) => {
-
-    return res.render("client/home/show.ejs");
+    const products = await getProducts();
+    return res.render("client/home/show.ejs",
+        {
+            products
+        }
+    );
 }
 
 

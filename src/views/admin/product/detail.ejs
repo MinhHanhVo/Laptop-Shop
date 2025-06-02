@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="Hỏi Dân IT - Dự án laptopshop" />
         <meta name="author" content="Hỏi Dân IT" />
-        <title>Create Product</title>
+        <title>Detail Product</title>
         <link href="/admin/css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -44,33 +44,35 @@
                                                     <%= error %>
                                                 </div>
                                                 <% }) %>
-                                                    <h5>Create Product</h5>
-                                                    <form action="/admin/create-product" method="post"
+                                                    <h5>Detail Product</h5>
+                                                    <form action="/admin/update-product" method="post"
                                                         enctype="multipart/form-data">
+                                                        <input name="id" style="display: none;"
+                                                            value="<%= product.id %>" type="text">
                                                         <div class="mb-3">
                                                             <label class="form-label">Name</label>
-                                                            <input value="<%=oldData.name%>" name="name"
+                                                            <input value="<%=product.name%>" name="name"
                                                                 class="form-control" type="text">
                                                         </div>
                                                         <div class="mb-3">
                                                             <label class="form-label">Price</label>
-                                                            <input value="<%=oldData.price%>" name="price" type="number"
+                                                            <input value="<%=product.price%>" name="price" type="number"
                                                                 class="form-control">
                                                         </div>
                                                         <div class="mb-3">
                                                             <label class="form-label">Detail Description</label>
                                                             <textarea name="detailDesc" rows="2"
-                                                                class="form-control"><%=oldData.detailDesc%></textarea>
+                                                                class="form-control"><%=product.detailDesc%></textarea>
                                                         </div>
                                                         <div class="row">
                                                             <div class="mb-3 col-6">
                                                                 <label class="form-label">Short Description</label>
-                                                                <input value="<%=oldData.shortDesc%>" type="text"
+                                                                <input value="<%=product.shortDesc%>" type="text"
                                                                     class="form-control" name="shortDesc">
                                                             </div>
                                                             <div class="mb-3 col-6">
                                                                 <label class="form-label">Quantity</label>
-                                                                <input value="<%=oldData.quantity%>" type="number"
+                                                                <input value="<%=product.quantity%>" type="number"
                                                                     class="form-control" name="quantity">
                                                             </div>
                                                         </div>
@@ -78,25 +80,25 @@
                                                             <div class="mb-3 col-6">
                                                                 <label class="form-label">Factory</label>
                                                                 <select name="factory" class="form-select">
-                                                                    <option value="APPLE">Apple (MacBook)</option>
-                                                                    <option value="ASUS">Asus</option>
-                                                                    <option value="LENOVO">Lenovo</option>
-                                                                    <option value="DELL">Dell</option>
-                                                                    <option value="LG">LG</option>
-                                                                    <option value="ACER">Acer</option>
+                                                                    <% factoryOptions.forEach((factory,index)=> { %>
+                                                                        <option value="<%-factory.value %>"
+                                                                            <%=factory.value===product.factory
+                                                                            ? 'selected' : '' %>>
+                                                                            <%- factory.name %>
+                                                                        </option>
+                                                                        <%})%>
                                                                 </select>
                                                             </div>
                                                             <div class="mb-3 col-6">
                                                                 <label class="form-label">Target</label>
                                                                 <select name="target" class="form-select">
-                                                                    <option value="GAMING">Gaming</option>
-                                                                    <option value="SINHVIEN-VANPHONG">Sinh viên - Văn
-                                                                        phòng
-                                                                    </option>
-                                                                    <option value="THIET-KE-DO-HOA">Thiết kế đồ họa
-                                                                    </option>
-                                                                    <option value="MONG-NHE">Mỏng nhẹ</option>
-                                                                    <option value="DOANH-NHAN">Doanh nhân</option>
+                                                                    <% targetOptions.forEach((target,index)=> { %>
+                                                                        <option value="<%-target.value %>"
+                                                                            <%=target.value===product.target
+                                                                            ? 'selected' : '' %>>
+                                                                            <%- target.name %>
+                                                                        </option>
+                                                                        <%})%>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -105,12 +107,22 @@
                                                             <input name="image" class="form-control" type="file"
                                                                 id="avatarFile" accept=".png, .jpg, .jpeg">
                                                         </div>
-                                                        <img style="max-height: 250px; display: none;"
-                                                            alt="avatar preview" id="avatarPreview" />
-                                                        <div class="mb-3">
-                                                            <button type="submit"
-                                                                class="btn btn-warning  mt-2">Submit</button>
-                                                        </div>
+                                                        <% if (product.image) { %>
+                                                            <img style="max-height: 250px; display: block;"
+                                                                alt="avatar preview" id="avatarPreview"
+                                                                src="/images/product/<%= product.image %>" />
+
+                                                            <% } else { %>
+                                                                <img style="max-height: 250px; display:none;"
+                                                                    alt="avatar preview" id="avatarPreview" />
+
+                                                                <% } %>
+                                                                    <img style="max-height: 250px; display: none;"
+                                                                        alt="avatar preview" id="avatarPreview" />
+                                                                    <div class="mb-3">
+                                                                        <button type="submit"
+                                                                            class="btn btn-warning  mt-2">Submit</button>
+                                                                    </div>
                                                     </form>
                                         </div>
                                     </div>
