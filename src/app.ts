@@ -1,8 +1,14 @@
+/// <reference path="./types/index.d.ts" />
 const { log } = require("console");
 import express from "express";
 import 'dotenv/config'
 import webRoutes from "./routes/web";
 import initDatabase from "config/seed";
+import passport from "passport";
+import configPassportLocal from "./middleware/passport.local";
+import session from "express-session";
+const { PrismaSessionStore } = require('@quixo3/prisma-session-store');
+const { PrismaClient } = require('@prisma/client');
 
 
 const app = express();
@@ -18,10 +24,47 @@ app.use(express.urlencoded({ extended: true }));
 
 // config static file: images/css/js
 app.use(express.static('public'))
+// config session
+app.use(session({
+    cookie: {
+        maxAge: 7 * 24 * 60 * 60 * 1000 // ms
+    },
+    secret: 'a santa at nasa',
+    // Forces session save even if unchange
+    resave: false,
+    // Saves unmodified sessions
+    saveUninitialized: false,
+    store: new PrismaSessionStore(
+        new PrismaClient(),
+        {
+            checkPeriod: 30 * 60 * 1000,  //ms
+            dbRecordIdIsSessionId: true,
+            dbRecordIdFunction: undefined,
+        }
+    )
+}))
+// config passport
+app.use(passport.initialize());
+app.use(passport.authenticate('session'));
+
+configPassportLocal()
+
+//middleware config global 
+app.use((req, res, next) => {
+    res.locals.user = req.user || null; // Pass user object to all views
+    next();
+});
+
+
 // config routes
 webRoutes(app);
 // seeding data
 initDatabase();
+// handle not found 404
+app.use((req, res) => {
+    // res.send("404 not found");
+    res.render("status/404.ejs")
+})
 
 
 

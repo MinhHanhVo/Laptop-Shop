@@ -8,6 +8,10 @@ const hashPassword = async (plainText: string) => {
     return await bcrypt.hash(plainText, saltRounds)
 }
 
+const comparePassword = async (plainText: string, hashPassword: string) => {
+    return await bcrypt.compare(plainText, hashPassword)
+}
+
 // create user
 const handleCreateUser = async (
     name: string,
@@ -78,5 +82,5 @@ const getAllRoles = async () => {
 
 export {
     handleCreateUser, getAllUsers, handleDeleteUser, getUserById,
-    updateUserById, getAllRoles, hashPassword
+    updateUserById, getAllRoles, hashPassword, comparePassword
 };
