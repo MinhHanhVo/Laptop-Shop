@@ -22,6 +22,8 @@ const getAllProducts = async () => {
     return products;
 }
 
+
+
 const handleDeleteProduct = async (id: string) => {
     await prisma.product.delete({
         where: {

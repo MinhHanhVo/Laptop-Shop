@@ -19,12 +19,60 @@
                 <div id="layoutSidenav_content">
                     <main>
                         <div class="container-fluid px-4">
-                            <h1 class="mt-4">Manage Users</h1>
+                            <h1 class="mt-4">Manage Orders</h1>
                             <ol class="breadcrumb mb-4">
                                 <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
                                 <li class="breadcrumb-item active">Orders</li>
                             </ol>
-                            <div>table user</div>
+                            <div>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <h5>Table Orders:
+                                    </h5>
+                                </div>
+                                <hr>
+                                <table class="table table-hover table-bordered">
+                                    <thead>
+                                        <th>ID</th>
+                                        <th>User</th>
+                                        <th>Total Price</th>
+                                        <th>Status</th>
+                                        <th>Payment Method</th>
+                                        <th>Payment Status</th>
+                                        <th>Action</th>
+                                    </thead>
+                                    <tbody>
+                                        <% orders.forEach( function (order) { %>
+                                            <tr>
+                                                <td>
+                                                    <%= order.id %>
+                                                </td>
+                                                <td>
+                                                    <%= order.User.fullName %>
+                                                </td>
+                                                <td>
+                                                    <%= order.totalPrice %>
+                                                </td>
+                                                <td>
+                                                    <%= order.status %>
+                                                </td>
+                                                <td>
+                                                    <%= order.paymentMethod %>
+                                                </td>
+                                                <td>
+                                                    <%= order.paymentStatus %>
+                                                </td>
+                                                <td>
+                                                    <div style="display: flex; gap: 10px;">
+                                                        <form action="/admin/order/<%= order.id %>" method="get">
+                                                            <button type="submit" class="btn btn-warning">View</button>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <% }) %>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
 
                     </main>
