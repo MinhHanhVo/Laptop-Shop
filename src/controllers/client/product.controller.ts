@@ -75,6 +75,7 @@ const postHandleCartToCheckout = async (req: Request, res: Response) => {
         = req.body?.cartDetails ?? [];
     await updateCartDetailBeforeCheckout(currentCartDetail, cartId);
 
+
     return res.redirect("/checkout")
 }
 

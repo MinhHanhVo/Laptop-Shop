@@ -7,6 +7,7 @@ import initDatabase from "config/seed";
 import passport from "passport";
 import configPassportLocal from "./middleware/passport.local";
 import session from "express-session";
+import apiRoutes from "routes/api";
 const { PrismaSessionStore } = require('@quixo3/prisma-session-store');
 const { PrismaClient } = require('@prisma/client');
 
@@ -58,6 +59,8 @@ app.use((req, res, next) => {
 
 // config routes
 webRoutes(app);
+// api routes
+apiRoutes(app);
 // seeding data
 initDatabase();
 // handle not found 404

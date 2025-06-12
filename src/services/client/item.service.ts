@@ -2,9 +2,21 @@ import { itxClientDenyList } from "@prisma/client/runtime/library";
 import { prisma } from "config/client"
 import { any } from "zod";
 
-const getProducts = async () => {
-    const products = await prisma.product.findMany();
+const getProducts = async (page: number, pageSize: number) => {
+    const skip = (page - 1) * pageSize;
+    const products = await prisma.product.findMany({
+        skip: skip,
+        take: pageSize,
+    });
     return products;
+}
+
+const countTotalProductClientPages = async (pageSize: number) => {
+    const totalItems = await prisma.product.count();
+
+    const totalPages = Math.ceil(totalItems / pageSize);
+    return totalPages;
+
 }
 
 const getDetailProduct = async (id: string) => {
@@ -145,7 +157,7 @@ const updateCartDetailBeforeCheckout = async (data: { id: string, quantity: stri
     let quantity = 0;
     for (let i = 0; i < data.length; i++) {
         quantity += +(data[i].quantity);
-        await prisma.cartDetail.update({
+        const cart = await prisma.cartDetail.update({
             where: {
                 id: +(data[i].id)
             },
@@ -261,5 +273,6 @@ const getOrderHistory = async (userId: number) => {
 }
 export {
     getProducts, getDetailProduct, addProductToCart, getProductInCart,
-    deleteProductInCart, updateCartDetailBeforeCheckout, handlePlaceOrder, getOrderHistory
+    deleteProductInCart, updateCartDetailBeforeCheckout, handlePlaceOrder, getOrderHistory,
+    countTotalProductClientPages
 }

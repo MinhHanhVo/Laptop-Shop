@@ -1,19 +1,51 @@
 import { Request, Response } from "express";
-import { getProducts } from "services/client/item.service";
+import { countTotalProductClientPages, getProducts } from "services/client/item.service";
+import { getProductWithFilter, userFilter } from "services/client/product.filter";
 import { handleCreateUser, handleDeleteUser, getUserById, updateUserById, getAllRoles } from "services/user.service";
+import { date } from "zod";
 
 const getHomePage = async (req: Request, res: Response) => {
-    const products = await getProducts();
-    const user = req.user;
-    console.log(">>> current user: ", user);
 
+    const { page } = req.query;
+    let currentPage = page ? +page : 1;
+    if (currentPage <= 0) currentPage = 1;
+    const totalPages = await countTotalProductClientPages(8);
+    const products = await getProducts(currentPage, 8);
     return res.render("client/home/show.ejs",
         {
-            products
+            products,
+            totalPages,
+            page: currentPage
         }
     );
 }
 
+const getProductFilterPage = async (req: Request, res: Response) => {
+    const { page, factory = "", target = "", price = "", sort = "" }
+        = req.query as {
+            page?: string;
+            factory: string;
+            target: string;
+            price: string;
+            sort: string;
+        };
+
+    let currentPage = page ? +page : 1;
+    if (currentPage <= 0) currentPage = 1;
+
+    // const totalPages = await countTotalProductClientPages(9);
+    // const products = await getProducts(currentPage, 9);
+
+    const data = await getProductWithFilter(currentPage, 9, factory, target, price, sort);
+
+    return res.render("client/product/filter.ejs",
+        {
+            products: data.products,
+            totalPages: +data.totalPages,
+            page: currentPage
+        }
+    );
+}
 
 
 const getCreateUserPage = async (req: Request, res: Response) => {
@@ -22,6 +54,7 @@ const getCreateUserPage = async (req: Request, res: Response) => {
         roles
     })
 }
+
 
 // Tạo mới user
 const postCreateUser = async (req: Request, res: Response) => {
@@ -67,4 +100,7 @@ const postUpdateUser = async (req: Request, res: Response) => {
 
     return res.redirect("/admin/user")
 }
-export { getHomePage, getCreateUserPage, postCreateUser, postDeleteUser, getViewUser, postUpdateUser };
+export {
+    getHomePage, getCreateUserPage, postCreateUser,
+    getProductFilterPage, postDeleteUser, getViewUser, postUpdateUser
+};
