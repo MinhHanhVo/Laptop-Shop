@@ -8,12 +8,18 @@ import passport from "passport";
 import configPassportLocal from "./middleware/passport.local";
 import session from "express-session";
 import apiRoutes from "routes/api";
-const { PrismaSessionStore } = require('@quixo3/prisma-session-store');
-const { PrismaClient } = require('@prisma/client');
+import { PrismaSessionStore } from "@quixo3/prisma-session-store";
+import { PrismaClient } from "@prisma/client";
+import cors from "cors"
 
 
 const app = express();
 const port = process.env.port || 8080;
+
+// config cors
+app.use(cors({
+    origin: ["http://localhost:5173"]
+}));
 
 // config view engine
 app.set('view engine', 'ejs');
