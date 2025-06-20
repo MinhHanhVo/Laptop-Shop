@@ -4,7 +4,7 @@
 
 ---
 
-## 📌 Tính năng nổi bật
+## Tính năng nổi bật
 
 - 🔐 Đăng ký / Đăng nhập / Đăng xuất
 - 👤 Quản lý người dùng (User / Admin)
@@ -29,20 +29,26 @@
 
 ---
 
-## 🚀 Cách chạy dự án
+## Cách chạy dự án
 
 ### 1. Clone & cài đặt phụ thuộc
 ```bash
 git clone https://github.com/MinhHanhVo/Laptop-Shop.git
 cd Laptop-Shop
 npm install
+
 ### 2. Cấu hình .env
+```bash
 NODE_ENV =
 port =
 JWT_SECRET=
 JWT_EXPIRES_IN=
 DATABASE_URL =
+
 ### 3. Khởi tạo schema database
+```bash
 npx prisma migrate deploy
+
 ### 4. Chạy ứng dụng local
+```bash
 npm run dev
